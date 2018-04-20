@@ -72,7 +72,7 @@ contract BasicSPIKE is ERC223 {
     
     uint256 public constant decimals = 10;
     string public constant symbol = "SPIKE";
-    string public constant name = "SPIKE";
+    string public constant name = "Spiking";
     uint256 public _totalSupply = 10 ** 20; // total supply is 10^20 unit, equivalent to 10 Billion SPIKE
 
     // Owner of this contract
