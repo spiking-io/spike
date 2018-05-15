@@ -73,10 +73,11 @@ contract BasicSPIKE is ERC223 {
     uint256 public constant decimals = 10;
     string public constant symbol = "SPIKE";
     string public constant name = "Spiking";
-    uint256 public _totalSupply = 10 ** 20; // total supply is 10^20 unit, equivalent to 10 Billion SPIKE
+    uint256 public _totalSupply = 5 * 10 ** 19; // total supply is 5*10^19 unit, equivalent to 5 Billion SPIKE
 
     // Owner of this contract
     address public owner;
+    address public airdrop;
 
     // tradable
     bool public tradable = false;
@@ -96,7 +97,7 @@ contract BasicSPIKE is ERC223 {
     }
 
     modifier isTradable(){
-        require(tradable == true || msg.sender == owner);
+        require(tradable == true || msg.sender == airdrop || msg.sender == owner);
         _;
     }
 
@@ -106,6 +107,7 @@ contract BasicSPIKE is ERC223 {
         owner = msg.sender;
         balances[owner] = _totalSupply;
         Transfer(0x0, owner, _totalSupply);
+        airdrop = 0x00227086ab72678903091d315b04a8dacade39647a;
     }
     
     /// @dev Gets totalSupply
@@ -260,13 +262,20 @@ contract BasicSPIKE is ERC223 {
     onlyOwner{
         tradable = true;
     }
+
+    // @dev allow owner to update airdrop admin
+    function updateAirdrop(address newAirdropAdmin) 
+    public 
+    onlyOwner{
+        airdrop = newAirdropAdmin;
+    }
 }
 
 contract SPIKE is BasicSPIKE {
 
     bool public _selling = true;//initial selling
     
-    uint256 public _originalBuyPrice = 50000 * 10**10; // original buy 1ETH = 50000 SPIKE = 50000 * 10**10 unit
+    uint256 public _originalBuyPrice = 80000 * 10**10; // original buy 1ETH = 80000 SPIKE = 80000 * 10**10 unit
 
     // List of approved investors
     mapping(address => bool) private approvedInvestorList;
@@ -388,7 +397,7 @@ contract SPIKE is BasicSPIKE {
     }
 
     /// @dev Updates buy price (owner ONLY)
-    /// @param newBuyPrice New buy price (in UNIT) 1ETH <=> 100 000 0000000000 unit
+    /// @param newBuyPrice New buy price (in UNIT) 1ETH <=> 80,000 SPKIE = 100,000.0000000000 unit
     function setBuyPrice(uint256 newBuyPrice) 
     onlyOwner 
     public {
